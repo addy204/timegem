@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   }
 
   devise_scope :user do
-    get 'users/sign_out', to: 'users/sessions#destroy'
+    get 'users/sign_out', to: 'devise/sessions#destroy'
   end
 
   resources :products, only: [:index, :show]

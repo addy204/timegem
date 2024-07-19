@@ -93,6 +93,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_19_202710) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_customers_on_user_id"
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -144,6 +146,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_19_202710) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "addresses", "customers"
+  add_foreign_key "customers", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "customers"

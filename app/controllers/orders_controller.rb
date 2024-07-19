@@ -1,20 +1,23 @@
 class OrdersController < ApplicationController
   before_action :initialize_cart, only: [:new, :create]
+  before_action :authenticate_user!
 
   def new
-    @order = Order.new
-    @order.build_customer
+    @order = current_user.orders.build
+    @order.build_customer unless current_user.customer
+    if @order.customer.nil?
+      @order.build_customer
+    end
+    @order.customer.addresses.build if @order.customer.addresses.empty?
   end
 
   def create
-    @customer = Customer.find_or_initialize_by(email: order_params[:customer][:email]) do |customer|
-      customer.name = order_params[:customer][:name]
-    end
+    @order = current_user.orders.build(order_params)
+    @order.customer = current_user.customer || current_user.build_customer(order_params[:customer_attributes])
+    @order.status = "pending"
+    @order.total = calculate_total
 
-    if @customer.save
-      @address = @customer.addresses.create(order_params[:address])
-
-      @order = @customer.orders.create(status: "pending", total: calculate_total)
+    if @order.save
       @cart['items'].each do |item|
         product = Product.find(item['product_id'])
         @order.order_items.create(
@@ -23,16 +26,11 @@ class OrdersController < ApplicationController
           price: product.price
         )
       end
-
-      if @order.save
-        session.delete(:cart)
-        redirect_to @order, notice: "Order was successfully created."
-      else
-        flash[:alert] = "Order creation failed."
-        render :new
-      end
+      session.delete(:cart)
+      redirect_to @order, notice: "Order was successfully created."
     else
-      flash[:alert] = "Invalid customer details."
+      @order.customer.addresses.build unless @order.customer.addresses.any?
+      flash[:alert] = "Order creation failed."
       render :new
     end
   end
@@ -45,8 +43,7 @@ class OrdersController < ApplicationController
 
   def order_params
     params.require(:order).permit(
-      customer: [:name, :email],
-      address: [:address_line_1, :address_line_2, :city, :province, :postal_code, :country]
+      customer_attributes: [:name, :email, addresses_attributes: [:address_line_1, :address_line_2, :city, :province, :postal_code, :country]]
     )
   end
 
@@ -56,7 +53,7 @@ class OrdersController < ApplicationController
       product.price * item['quantity']
     end
 
-    province = order_params[:address][:province]
+    province = order_params[:customer_attributes][:addresses_attributes]["0"][:province]
     gst = 0.05 # 5% GST
     pst = 0.07 # 7% PST
     hst = 0.13 # 13% HST
