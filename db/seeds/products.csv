@@ -1,51 +1,51 @@
-name,description,price,stock_quantity,category
-Rolex Submariner,A luxury diving watch.,7999.99,10,Watches
-Cartier Love Bracelet,An elegant bracelet.,4999.99,20,Jewelry
-Omega Speedmaster,A classic chronograph watch.,5999.99,15,Watches
-Tiffany Diamond Ring,A stunning diamond ring.,8999.99,5,Jewelry
-Hermes Scarf,A fashionable silk scarf.,399.99,30,Accessories
-Louis Vuitton Bag,A high-end leather bag.,1999.99,8,Accessories
-Gucci Sunglasses,Stylish sunglasses.,299.99,25,Accessories
-Patek Philippe Nautilus,A prestigious sports watch.,22999.99,3,Watches
-Chanel No. 5 Perfume,Iconic fragrance for women.,149.99,50,Accessories
-Bvlgari Serpenti Watch,A watch with a serpentine design.,12999.99,7,Watches
-Prada Leather Wallet,A premium leather wallet.,499.99,40,Accessories
-Dior Silk Tie,A luxurious silk tie.,299.99,35,Accessories
-Breitling Navitimer,An aviation-inspired chronograph.,7999.99,10,Watches
-Van Cleef & Arpels Necklace,A necklace with intricate design.,7999.99,10,Jewelry
-Tag Heuer Carrera,A sleek racing-inspired watch.,3999.99,20,Watches
-Yves Saint Laurent Clutch,A chic leather clutch.,899.99,15,Accessories
-Audemars Piguet Royal Oak,A legendary luxury watch.,24999.99,5,Watches
-Fendi Fur Stole,A fur stole for the elite.,399.99,12,Accessories
-IWC Pilot's Watch,A watch inspired by aviation.,5499.99,18,Watches
-Tiffany Earrings,Elegant diamond earrings.,999.99,22,Jewelry
-Chopard Happy Diamonds Ring,A ring with floating diamonds.,6999.99,9,Jewelry
-Panerai Luminor,A robust diving watch.,6999.99,6,Watches
-Montblanc Fountain Pen,A high-quality fountain pen.,399.99,50,Accessories
-Versace Belt,A stylish leather belt.,199.99,45,Accessories
-Vacheron Constantin Patrimony,A timeless dress watch.,24999.99,4,Watches
-Rolex Daytona,A racing chronograph watch.,9999.99,9,Watches
-Cartier Tank Watch,A classic rectangular watch.,5999.99,14,Watches
-Omega Seamaster,A professional diving watch.,4999.99,11,Watches
-Tiffany Bracelet,A classic silver bracelet.,1499.99,27,Jewelry
-Hermes Belt,A high-end leather belt.,399.99,33,Accessories
-Louis Vuitton Shoes,Luxury leather shoes.,799.99,21,Accessories
-Gucci Watch,A stylish wristwatch.,17999.99,4,Watches
-Patek Philippe Aquanaut,A rugged sports watch.,24999.99,2,Watches
-Chanel Earrings,Elegant pearl earrings.,999.99,23,Jewelry
-Bvlgari Ring,A signature ring.,1499.99,27,Jewelry
-Prada Shoes,Designer shoes.,899.99,17,Jewelry
-Dior Bracelet,A delicate bracelet.,5499.99,8,Watches
-Breitling Superocean,A robust diving watch.,9999.99,13,Jewelry
-Van Cleef & Arpels Ring,An exquisite diamond ring.,3999.99,20,Watches
-Tag Heuer Monaco,A square-faced watch.,499.99,18,Accessories
-Yves Saint Laurent Belt,A designer leather belt.,21999.99,3,Watches
-Audemars Piguet Millenary,A contemporary dress watch.,1599.99,16,Accessories
-Fendi Bag,A luxury handbag.,6999.99,6,Watches
-IWC Portugieser,A classic dress watch.,799.99,28,Jewelry
-Tiffany Necklace,A diamond necklace.,7499.99,10,Jewelry
-Chopard Watch,A luxurious wristwatch.,7999.99,12,Watches
-Panerai Radiomir,A vintage-inspired watch.,8999.99,8,Watches
-Montblanc Watch,A luxury leather watch.,1499.99,25,Accessories
-Versace Necklace,A gold necklace.,129.99,50,Jewelry
-Vacheron Constantin Traditionnelle,A traditional dress watch.,29999.99,2,Watches
+name,description,price,stock_quantity,category,on_sale
+Rolex Submariner,A luxury diving watch.,7999.99,10,Watches,true
+Cartier Love Bracelet,An elegant bracelet.,4999.99,20,Jewelry,false
+Omega Speedmaster,A classic chronograph watch.,5999.99,15,Watches,true
+Tiffany Diamond Ring,A stunning diamond ring.,8999.99,5,Jewelry,false
+Hermes Scarf,A fashionable silk scarf.,399.99,30,Accessories,true
+Louis Vuitton Bag,A high-end leather bag.,1999.99,8,Accessories,false
+Gucci Sunglasses,Stylish sunglasses.,299.99,25,Accessories,true
+Patek Philippe Nautilus,A prestigious sports watch.,22999.99,3,Watches,false
+Chanel No. 5 Perfume,Iconic fragrance for women.,149.99,50,Accessories,true
+Bvlgari Serpenti Watch,A watch with a serpentine design.,12999.99,7,Watches,false
+Prada Leather Wallet,A premium leather wallet.,499.99,40,Accessories,true
+Dior Silk Tie,A luxurious silk tie.,299.99,35,Accessories,false
+Breitling Navitimer,An aviation-inspired chronograph.,7999.99,10,Watches,true
+Van Cleef & Arpels Necklace,A necklace with intricate design.,7999.99,10,Jewelry,false
+Tag Heuer Carrera,A sleek racing-inspired watch.,3999.99,20,Watches,true
+Yves Saint Laurent Clutch,A chic leather clutch.,899.99,15,Accessories,false
+Audemars Piguet Royal Oak,A legendary luxury watch.,24999.99,5,Watches,true
+Fendi Fur Stole,A fur stole for the elite.,399.99,12,Accessories,false
+IWC Pilot's Watch,A watch inspired by aviation.,5499.99,18,Watches,true
+Tiffany Earrings,Elegant diamond earrings.,999.99,22,Jewelry,false
+Chopard Happy Diamonds Ring,A ring with floating diamonds.,6999.99,9,Jewelry,true
+Panerai Luminor,A robust diving watch.,6999.99,6,Watches,false
+Montblanc Fountain Pen,A high-quality fountain pen.,399.99,50,Accessories,true
+Versace Belt,A stylish leather belt.,199.99,45,Accessories,false
+Vacheron Constantin Patrimony,A timeless dress watch.,24999.99,4,Watches,true
+Rolex Daytona,A racing chronograph watch.,9999.99,9,Watches,false
+Cartier Tank Watch,A classic rectangular watch.,5999.99,14,Watches,true
+Omega Seamaster,A professional diving watch.,4999.99,11,Watches,false
+Tiffany Bracelet,A classic silver bracelet.,1499.99,27,Jewelry,true
+Hermes Belt,A high-end leather belt.,399.99,33,Accessories,false
+Louis Vuitton Shoes,Luxury leather shoes.,799.99,21,Accessories,true
+Gucci Watch,A stylish wristwatch.,17999.99,4,Watches,false
+Patek Philippe Aquanaut,A rugged sports watch.,24999.99,2,Watches,true
+Chanel Earrings,Elegant pearl earrings.,999.99,23,Jewelry,false
+Bvlgari Ring,A signature ring.,1499.99,27,Jewelry,true
+Prada Shoes,Designer shoes.,899.99,17,Jewelry,false
+Dior Bracelet,A delicate bracelet.,5499.99,8,Watches,true
+Breitling Superocean,A robust diving watch.,9999.99,13,Jewelry,false
+Van Cleef & Arpels Ring,An exquisite diamond ring.,3999.99,20,Watches,true
+Tag Heuer Monaco,A square-faced watch.,499.99,18,Accessories,false
+Yves Saint Laurent Belt,A designer leather belt.,21999.99,3,Watches,true
+Audemars Piguet Millenary,A contemporary dress watch.,1599.99,16,Accessories,false
+Fendi Bag,A luxury handbag.,6999.99,6,Watches,true
+IWC Portugieser,A classic dress watch.,799.99,28,Jewelry,false
+Tiffany Necklace,A diamond necklace.,7499.99,10,Jewelry,true
+Chopard Watch,A luxurious wristwatch.,7999.99,12,Watches,false
+Panerai Radiomir,A vintage-inspired watch.,8999.99,8,Watches,true
+Montblanc Watch,A luxury leather watch.,1499.99,25,Accessories,false
+Versace Necklace,A gold necklace.,129.99,50,Jewelry,true
+Vacheron Constantin Traditionnelle,A traditional dress watch.,29999.99,2,Watches,false

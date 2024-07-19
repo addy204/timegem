@@ -1,0 +1,48 @@
+<h1>Products</h1>
+
+<%= search_form_for @q, url: products_path, method: :get do |form| %>
+  <div>
+    <%= form.label :name_cont, "Search by Name" %>
+    <%= form.text_field :name_cont %>
+  </div>
+  <div>
+    <%= form.label :category_id_eq, "Filter by Category" %>
+    <%= form.collection_select :category_id_eq, @categories, :id, :name, prompt: "Select a Category" %>
+  </div>
+  <div>
+    <%= form.label :on_sale_true, "On Sale" %>
+    <%= form.check_box :on_sale_true %>
+  </div>
+  <div>
+    <%= form.label :created_at_gteq, "New (added in the last 3 days)" %>
+    <%= form.check_box :created_at_gteq, {}, 3.days.ago, nil %>
+  </div>
+  <div>
+    <%= form.label :updated_at_gteq, "Recently Updated (updated in the last 3 days)" %>
+    <%= form.check_box :updated_at_gteq, {}, 3.days.ago, nil %>
+  </div>
+  <div>
+    <%= form.submit "Search" %>
+  </div>
+<% end %>
+
+<%= paginate @products %>
+
+<% @products.each do |product| %>
+  <div>
+    <h2><%= link_to product.name, product_path(product) %></h2>
+    <p><%= product.description %></p>
+    <p>Price: <%= product.price %></p>
+    <p>Stock Quantity: <%= product.stock_quantity %></p>
+    <p>Category: <%= product.category.name %></p>
+    <% if product.images.attached? %>
+      <div>
+        <% product.images.each do |image| %>
+          <%= image_tag url_for(image) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<%= paginate @products %>

@@ -37,7 +37,8 @@ if File.exist?(categories_path) && File.exist?(products_path)
         description: row['description'],
         price: row['price'],
         stock_quantity: row['stock_quantity'],
-        category: category
+        category: category,
+        on_sale: [true, false].sample # Randomly set on_sale to true or false
       )
       product_count += 1
     else
@@ -57,7 +58,8 @@ if File.exist?(categories_path) && File.exist?(products_path)
         description: Faker::Lorem.sentence,
         price: Faker::Commerce.price(range: 100..20000.0, as_string: true),
         stock_quantity: Faker::Number.between(from: 1, to: 100),
-        category: category
+        category: category,
+        on_sale: [true, false].sample # Randomly set on_sale to true or false
       )
     end
     puts "Seeded additional products to reach 100 products."

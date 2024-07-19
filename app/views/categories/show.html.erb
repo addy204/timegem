@@ -1,0 +1,22 @@
+<h1>Category: <%= @category.name %></h1>
+<p><%= @category.description %></p>
+
+<%= paginate @products %>
+
+<% @products.each do |product| %>
+  <div>
+    <h2><%= link_to product.name, product_path(product) %></h2>
+    <p><%= product.description %></p>
+    <p>Price: <%= product.price %></p>
+    <p>Stock Quantity: <%= product.stock_quantity %></p>
+    <% if product.images.attached? %>
+      <div>
+        <% product.images.each do |image| %>
+          <%= image_tag url_for(image) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<%= paginate @products %>
