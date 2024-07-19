@@ -1,5 +1,7 @@
 <h1>Products</h1>
 
+<%= link_to 'View Cart', cart_path, class: 'btn btn-primary' %>
+
 <%= search_form_for @q, url: products_path, method: :get do |form| %>
   <div>
     <%= form.label :name_cont, "Search by Name" %>
@@ -10,7 +12,7 @@
     <%= form.collection_select :category_id_eq, @categories, :id, :name, prompt: "Select a Category" %>
   </div>
   <div>
-    <%= form.label :on_sale_true, "On Sale" %>
+    <%= form.label :on_sale, "On Sale" %>
     <%= form.check_box :on_sale_true %>
   </div>
   <div>
@@ -42,6 +44,7 @@
         <% end %>
       </div>
     <% end %>
+    <%= button_to 'Add to Cart', add_to_cart_path(product_id: product.id), method: :post %>
   </div>
 <% end %>
 

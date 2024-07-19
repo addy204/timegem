@@ -3,7 +3,6 @@
 <p>Price: <%= @product.price %></p>
 <p>Stock Quantity: <%= @product.stock_quantity %></p>
 <p>Category: <%= @product.category.name %></p>
-
 <% if @product.images.attached? %>
   <div>
     <% @product.images.each do |image| %>
@@ -11,3 +10,5 @@
     <% end %>
   </div>
 <% end %>
+
+<%= button_to 'Add to Cart', add_to_cart_path(@product), method: :post %>
