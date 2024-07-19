@@ -1,0 +1,38 @@
+<h1>Order Summary</h1>
+
+<p>Order ID: <%= @order.id %></p>
+<p>Status: <%= @order.status %></p>
+<p>Total: <%= number_to_currency(@order.total) %></p>
+
+<h2>Customer Details</h2>
+<p>Name: <%= @order.customer.name %></p>
+<p>Email: <%= @order.customer.email %></p>
+
+<h2>Address Details</h2>
+<p><%= @order.customer.addresses.last.address_line_1 %></p>
+<p><%= @order.customer.addresses.last.address_line_2 %></p>
+<p><%= @order.customer.addresses.last.city %>, <%= @order.customer.addresses.last.province %></p>
+<p><%= @order.customer.addresses.last.postal_code %></p>
+<p><%= @order.customer.addresses.last.country %></p>
+
+<h2>Order Items</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Price</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order.order_items.each do |item| %>
+      <tr>
+        <td><%= item.product.name %></td>
+        <td><%= item.quantity %></td>
+        <td><%= number_to_currency(item.price) %></td>
+        <td><%= number_to_currency(item.price * item.quantity) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

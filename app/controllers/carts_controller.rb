@@ -12,8 +12,8 @@ class CartsController < ApplicationController
     else
       @cart['items'] << { 'product_id' => product.id, 'quantity' => 1 }
     end
-    update_cart
-    redirect_to cart_path, notice: 'Product added to cart.'
+    session[:cart] = @cart
+    redirect_to cart_path
   end
 
   def update
@@ -21,26 +21,15 @@ class CartsController < ApplicationController
     item = @cart['items'].find { |i| i['product_id'] == product.id }
     if item
       item['quantity'] = params[:quantity].to_i
-      item['quantity'] = 1 if item['quantity'] < 1
+      session[:cart] = @cart
     end
-    update_cart
-    redirect_to cart_path, notice: 'Cart updated.'
+    redirect_to cart_path
   end
 
   def remove
     product = Product.find(params[:product_id])
-    @cart['items'].delete_if { |i| i['product_id'] == product.id }
-    update_cart
-    redirect_to cart_path, notice: 'Product removed from cart.'
-  end
-
-  private
-
-  def initialize_cart
-    @cart = session[:cart] ||= { 'items' => [] }
-  end
-
-  def update_cart
+    @cart['items'].reject! { |i| i['product_id'] == product.id }
     session[:cart] = @cart
+    redirect_to cart_path
   end
 end

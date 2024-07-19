@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     delete 'remove/:product_id', to: 'carts#remove', as: 'remove_from'
   end
 
+  resources :orders, only: [:new, :create, :show]
+
   get "up" => "rails/health#show", as: :rails_health_check
 
   root "products#index"
