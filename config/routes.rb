@@ -22,7 +22,7 @@ Rails.application.routes.draw do
 
   resources :orders, only: [:new, :create, :show]
 
-  get "up" => "rails/health#show", as: :rails_health_check
+  get '/pages/:title', to: 'pages#show', as: 'page'
 
   root "products#index"
 end

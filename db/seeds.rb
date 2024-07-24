@@ -7,6 +7,10 @@ AdminUser.find_or_create_by!(email: 'admin@example.com') do |admin_user|
   admin_user.password_confirmation = 'password'
 end
 
+# Seed Pages
+Page.find_or_create_by!(title: 'About', content: 'About us content goes here.')
+Page.find_or_create_by!(title: 'Contact', content: 'Contact us content goes here.')
+
 puts "Checking if files exist..."
 
 categories_path = Rails.root.join('db/seeds/categories.csv')
