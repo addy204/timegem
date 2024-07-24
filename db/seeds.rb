@@ -1,3 +1,4 @@
+# db/seeds.rb
 require 'csv'
 require 'faker'
 
@@ -10,6 +11,17 @@ end
 # Seed Pages
 Page.find_or_create_by!(title: 'About', content: 'About us content goes here.')
 Page.find_or_create_by!(title: 'Contact', content: 'Contact us content goes here.')
+
+# Seed Provinces
+provinces = [
+  'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador',
+  'Nova Scotia', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan',
+  'Northwest Territories', 'Nunavut', 'Yukon'
+]
+
+provinces.each do |province|
+  Province.find_or_create_by!(name: province)
+end
 
 puts "Checking if files exist..."
 

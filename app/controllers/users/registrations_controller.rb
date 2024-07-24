@@ -1,6 +1,10 @@
 # app/controllers/users/registrations_controller.rb
-module Users
-  class RegistrationsController < Devise::RegistrationsController
-    # Additional custom methods for registrations if needed
+class Users::RegistrationsController < Devise::RegistrationsController
+  def update
+    super do |resource|
+      if resource.errors.any?
+        Rails.logger.error "Validation errors: #{resource.errors.full_messages.join(", ")}"
+      end
+    end
   end
 end
