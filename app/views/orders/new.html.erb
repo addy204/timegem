@@ -1,58 +1,70 @@
 <h1>Checkout</h1>
 
-<%= form_with model: @order, local: true do |form| %>
-  <% if @order.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
-      <ul>
-        <% @order.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <h3>Customer Details</h3>
-  <%= form.fields_for :customer do |customer_form| %>
+<%= form_with model: @order, local: true do |f| %>
+  <%= f.fields_for :customer do |customer_fields| %>
+    <h2>Customer Information</h2>
     <div>
-      <%= customer_form.label :name %>
-      <%= customer_form.text_field :name %>
+      <%= customer_fields.label :name %>
+      <%= customer_fields.text_field :name %>
     </div>
     <div>
-      <%= customer_form.label :email %>
-      <%= customer_form.text_field :email %>
+      <%= customer_fields.label :email %>
+      <%= customer_fields.email_field :email %>
     </div>
 
-    <h3>Address Details</h3>
-    <%= customer_form.fields_for :addresses do |address_form| %>
+    <%= customer_fields.fields_for :addresses do |address_fields| %>
+      <h2>Shipping Address</h2>
       <div>
-        <%= address_form.label :address_line_1 %>
-        <%= address_form.text_field :address_line_1 %>
+        <%= address_fields.label :address_line_1 %>
+        <%= address_fields.text_field :address_line_1 %>
       </div>
       <div>
-        <%= address_form.label :address_line_2 %>
-        <%= address_form.text_field :address_line_2 %>
+        <%= address_fields.label :address_line_2 %>
+        <%= address_fields.text_field :address_line_2 %>
       </div>
       <div>
-        <%= address_form.label :city %>
-        <%= address_form.text_field :city %>
+        <%= address_fields.label :city %>
+        <%= address_fields.text_field :city %>
       </div>
       <div>
-        <%= address_form.label :province %>
-        <%= address_form.text_field :province %>
+        <%= address_fields.label :province %>
+        <%= address_fields.text_field :province %>
       </div>
       <div>
-        <%= address_form.label :postal_code %>
-        <%= address_form.text_field :postal_code %>
+        <%= address_fields.label :postal_code %>
+        <%= address_fields.text_field :postal_code %>
       </div>
       <div>
-        <%= address_form.label :country %>
-        <%= address_form.text_field :country %>
+        <%= address_fields.label :country %>
+        <%= address_fields.text_field :country %>
       </div>
     <% end %>
   <% end %>
 
+  <h2>Order Summary</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cart['items'].each do |item| %>
+        <% product = Product.find(item['product_id']) %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= item['quantity'] %></td>
+          <td><%= number_to_currency(product.price) %></td>
+          <td><%= number_to_currency(product.price * item['quantity']) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
   <div>
-    <%= form.submit "Place Order" %>
+    <%= f.submit "Place Order" %>
   </div>
 <% end %>

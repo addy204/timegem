@@ -1,4 +1,6 @@
 class OrdersController < ApplicationController
+  include OrdersHelper
+
   before_action :initialize_cart, only: [:new, :create]
   before_action :authenticate_user!
 
@@ -54,19 +56,7 @@ class OrdersController < ApplicationController
     end
 
     province = order_params[:customer_attributes][:addresses_attributes]["0"][:province]
-    gst = 0.05 # 5% GST
-    pst = 0.07 # 7% PST
-    hst = 0.13 # 13% HST
-
-    taxes = case province
-            when 'Ontario'
-              subtotal * hst
-            when 'British Columbia'
-              subtotal * (gst + pst)
-            else
-              subtotal * gst
-            end
-
+    taxes = calculate_taxes(subtotal, province)
     subtotal + taxes
   end
 end
