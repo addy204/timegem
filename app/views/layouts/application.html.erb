@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Timegems</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<head>
+  <title>Timegems</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
-  </head>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
+</head>
 
-  <body>
-    <header>
-      <nav>
-        <ul>
-          <li><%= link_to 'Products', products_path %></li>
-          <li><%= link_to 'Categories', categories_path %></li>
-          <li><%= link_to 'About', page_path(title: 'About') %></li>
-          <li><%= link_to 'Contact', page_path(title: 'Contact') %></li>
-          <li><%= link_to 'Cart', cart_path %></li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <%= yield %>
-    </main>
-  </body>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><%= link_to 'Products', products_path %></li>
+        <li><%= link_to 'Categories', categories_path %></li>
+        <li><%= link_to 'About', page_path(title: 'About') %></li>
+        <li><%= link_to 'Contact', page_path(title: 'Contact') %></li>
+        <li><%= link_to 'Cart', cart_path %></li>
+        <% if user_signed_in? %>
+          <li><%= link_to 'Profile', edit_user_registration_path %></li>
+          <li><%= link_to 'Logout', destroy_user_session_path, method: :delete %></li>
+        <% else %>
+          <li><%= link_to 'Sign Up', new_user_registration_path %></li>
+          <li><%= link_to 'Sign In', new_user_session_path %></li>
+        <% end %>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <%= yield %>
+  </main>
+</body>
 </html>
