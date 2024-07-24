@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   end
 
   resources :products, only: [:index, :show]
-  resources :categories, only: [:show]
+  resources :categories, only: [:index, :show]
 
   resource :cart, only: [:show] do
     post 'add/:product_id', to: 'carts#add', as: 'add_to'
