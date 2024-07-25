@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     delete 'remove/:product_id', to: 'carts#remove', as: 'remove_from'
   end
 
-  resources :orders, only: [:new, :create, :show]
+  resources :orders, only: [:index, :new, :create, :show]
 
   get '/pages/:title', to: 'pages#show', as: 'page'
 

@@ -38,7 +38,11 @@ class OrdersController < ApplicationController
   end
 
   def show
-    @order = Order.find(params[:id])
+    @order = Order.includes(:customer, :order_items => :product).find(params[:id])
+  end
+
+  def index
+    @orders = current_user.orders.includes(order_items: :product)
   end
 
   private
@@ -56,7 +60,17 @@ class OrdersController < ApplicationController
     end
 
     province = order_params[:customer_attributes][:addresses_attributes]["0"][:province]
-    taxes = calculate_taxes(subtotal, province)
+    tax_rate = TaxRate.find_by(province: province)
+    gst = tax_rate.gst_rate
+    pst = tax_rate.pst_rate
+    hst = tax_rate.hst_rate
+
+    taxes = if hst.present?
+      subtotal * hst / 100
+    else
+      subtotal * gst / 100 + subtotal * pst / 100
+    end
+
     subtotal + taxes
   end
 end
