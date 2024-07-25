@@ -1,9 +1,15 @@
 class Customer < ApplicationRecord
-  has_many :orders
+  belongs_to :user
+  has_many :orders, dependent: :destroy
   has_many :addresses, dependent: :destroy
 
-  accepts_nested_attributes_for :addresses
+  validates :name, :email, presence: true
 
-  validates :name, presence: true
-  validates :email, presence: true, uniqueness: true
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "email", "id", "name", "province_id", "updated_at", "user_id"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["user", "addresses"]
+  end
 end

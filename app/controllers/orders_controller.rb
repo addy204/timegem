@@ -59,18 +59,23 @@ class OrdersController < ApplicationController
       product.price * item['quantity']
     end
 
-    province = order_params[:customer_attributes][:addresses_attributes]["0"][:province]
-    tax_rate = TaxRate.find_by(province: province)
-    gst = tax_rate.gst_rate
-    pst = tax_rate.pst_rate
-    hst = tax_rate.hst_rate
+    address_params = order_params[:customer_attributes][:addresses_attributes]
+    if address_params.present?
+      province = address_params.values.first[:province]
+      tax_rate = TaxRate.find_by(province: province)
+      gst = tax_rate.gst
+      pst = tax_rate.pst
+      hst = tax_rate.hst
 
-    taxes = if hst.present?
-      subtotal * hst / 100
+      taxes = if hst.present?
+        subtotal * hst / 100
+      else
+        subtotal * gst / 100 + subtotal * pst / 100
+      end
+
+      subtotal + taxes
     else
-      subtotal * gst / 100 + subtotal * pst / 100
+      subtotal
     end
-
-    subtotal + taxes
   end
 end
