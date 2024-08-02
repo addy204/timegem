@@ -1,11 +1,11 @@
-class CreateTaxRates < ActiveRecord::Migration[7.1]
+# db/migrate/xxxx_create_tax_rates.rb
+class CreateTaxRates < ActiveRecord::Migration[7.0]
   def change
     create_table :tax_rates do |t|
       t.string :province
-      t.decimal :gst
-      t.decimal :pst
-      t.decimal :hst
-
+      t.decimal :gst, precision: 5, scale: 2
+      t.decimal :pst, precision: 5, scale: 2
+      t.decimal :hst, precision: 5, scale: 2
       t.timestamps
     end
   end

@@ -1,6 +1,8 @@
+<%= javascript_include_tag "https://js.stripe.com/v3/" %>
+
 <h1>Checkout</h1>
 
-<%= form_with model: @order, local: true do |f| %>
+<%= form_with model: @order, local: true, id: "payment-form" do |f| %>
   <%= f.fields_for :customer do |customer_fields| %>
     <h2>Customer Information</h2>
     <div>
@@ -28,7 +30,7 @@
       </div>
       <div>
         <%= address_fields.label :province %>
-        <%= address_fields.text_field :province %>
+        <%= address_fields.select :province_id, Province.all.collect { |p| [p.name, p.id] } %>
       </div>
       <div>
         <%= address_fields.label :postal_code %>
@@ -64,7 +66,56 @@
     </tbody>
   </table>
 
+  <h2>Payment Information</h2>
+  <div id="card-element">
+    <!-- A Stripe Element will be inserted here. -->
+  </div>
+
+  <!-- Used to display form errors. -->
+  <div id="card-errors" role="alert"></div>
+
   <div>
     <%= f.submit "Place Order" %>
   </div>
 <% end %>
+
+<script>
+  var stripe = Stripe('<%= Rails.application.credentials.dig(:stripe, :publishable_key) %>');
+  var elements = stripe.elements();
+  var card = elements.create('card');
+  card.mount('#card-element');
+
+  card.on('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  });
+
+  var form = document.getElementById('payment-form');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+      } else {
+        stripeTokenHandler(result.token);
+      }
+    });
+  });
+
+  function stripeTokenHandler(token) {
+    var form = document.getElementById('payment-form');
+    var hiddenInput = document.createElement('input');
+    hiddenInput.setAttribute('type', 'hidden');
+    hiddenInput.setAttribute('name', 'stripeToken');
+    hiddenInput.setAttribute('value', token.id);
+    form.appendChild(hiddenInput);
+
+    form.submit();
+  }
+</script>

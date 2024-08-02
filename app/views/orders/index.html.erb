@@ -5,9 +5,9 @@
     <tr>
       <th>Order ID</th>
       <th>Status</th>
+      <th>Subtotal</th>
+      <th>Taxes</th>
       <th>Total</th>
-      <th>Order Date</th>
-      <th>Products</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -15,14 +15,10 @@
     <% @orders.each do |order| %>
       <tr>
         <td><%= order.id %></td>
-        <td><%= order.status %></td>
+        <td><%= order.order_status %></td> <!-- Update here -->
+        <td><%= number_to_currency(order.subtotal) %></td>
+        <td><%= number_to_currency(order.calculate_taxes) %></td>
         <td><%= number_to_currency(order.total) %></td>
-        <td><%= order.created_at.strftime("%Y-%m-%d") %></td>
-        <td>
-          <% order.order_items.each do |item| %>
-            <p><%= item.product.name %> (x<%= item.quantity %>): <%= number_to_currency(item.price * item.quantity) %></p>
-          <% end %>
-        </td>
         <td><%= link_to 'View', order_path(order) %></td>
       </tr>
     <% end %>

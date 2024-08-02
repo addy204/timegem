@@ -1,23 +1,49 @@
+# app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
-  include OrdersHelper
-
   before_action :initialize_cart, only: [:new, :create]
   before_action :authenticate_user!
 
+  def index
+    @orders = current_user.orders.includes(:order_items => :product).order(created_at: :desc)
+  end
+
+  def show
+    @order = current_user.orders.find(params[:id])
+  end
+
   def new
     @order = current_user.orders.build
-    @order.build_customer unless current_user.customer
-    if @order.customer.nil?
+    if current_user.customer.nil?
       @order.build_customer
+      @order.customer.addresses.build
+    else
+      @order.customer = current_user.customer
+      @order.customer.addresses.build if @order.customer.addresses.empty?
     end
-    @order.customer.addresses.build if @order.customer.addresses.empty?
   end
 
   def create
     @order = current_user.orders.build(order_params)
-    @order.customer = current_user.customer || current_user.build_customer(order_params[:customer_attributes])
-    @order.status = "pending"
-    @order.total = calculate_total
+    @order.order_status = "pending"
+
+    if current_user.customer
+      @order.customer = current_user.customer
+      address_params = order_params[:customer_attributes][:addresses_attributes]["0"]
+      province = Province.find_by(id: address_params[:province_id])
+      if province
+        @order.customer.province_id = province.id
+        @order.customer.addresses.first.update(address_params)
+      end
+    else
+      customer_params = order_params[:customer_attributes]
+      province = Province.find_by(id: customer_params[:addresses_attributes]["0"][:province_id])
+      if province
+        customer_params[:province_id] = province.id
+        @order.customer = current_user.build_customer(customer_params)
+      end
+    end
+
+    @order.status = "unpaid"
 
     if @order.save
       @cart['items'].each do |item|
@@ -28,54 +54,55 @@ class OrdersController < ApplicationController
           price: product.price
         )
       end
-      session.delete(:cart)
-      redirect_to @order, notice: "Order was successfully created."
+
+      @order.update(total: @order.total)
+
+      process_payment
     else
       @order.customer.addresses.build unless @order.customer.addresses.any?
-      flash[:alert] = "Order creation failed."
+      flash[:alert] = "Order creation failed: #{@order.errors.full_messages.join(', ')}"
       render :new
     end
   end
 
-  def show
-    @order = Order.includes(:customer, :order_items => :product).find(params[:id])
-  end
-
-  def index
-    @orders = current_user.orders.includes(order_items: :product)
-  end
-
   private
+
+  def process_payment
+    charge = Stripe::Charge.create(
+      amount: (@order.total * 100).to_i,
+      currency: 'usd',
+      description: "Order ##{@order.id}",
+      source: params[:stripeToken]
+    )
+
+    if charge.paid
+      @order.update(status: 'paid')
+      session.delete(:cart)
+      redirect_to @order, notice: "Order was successfully created and paid."
+    else
+      flash[:alert] = "Payment failed. Please try again."
+      render :new
+    end
+  rescue Stripe::CardError => e
+    flash[:alert] = e.message
+    render :new
+  end
 
   def order_params
     params.require(:order).permit(
-      customer_attributes: [:name, :email, addresses_attributes: [:address_line_1, :address_line_2, :city, :province, :postal_code, :country]]
+      customer_attributes: [
+        :name,
+        :email,
+        :province_id,
+        addresses_attributes: [
+          :address_line_1,
+          :address_line_2,
+          :city,
+          :province_id,
+          :postal_code,
+          :country
+        ]
+      ]
     )
-  end
-
-  def calculate_total
-    subtotal = @cart['items'].sum do |item|
-      product = Product.find(item['product_id'])
-      product.price * item['quantity']
-    end
-
-    address_params = order_params[:customer_attributes][:addresses_attributes]
-    if address_params.present?
-      province = address_params.values.first[:province]
-      tax_rate = TaxRate.find_by(province: province)
-      gst = tax_rate.gst
-      pst = tax_rate.pst
-      hst = tax_rate.hst
-
-      taxes = if hst.present?
-        subtotal * hst / 100
-      else
-        subtotal * gst / 100 + subtotal * pst / 100
-      end
-
-      subtotal + taxes
-    else
-      subtotal
-    end
   end
 end

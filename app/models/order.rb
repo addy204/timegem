@@ -4,29 +4,39 @@ class Order < ApplicationRecord
 
   accepts_nested_attributes_for :order_items, :customer
 
-  validates :status, :total, presence: true
+  validates :order_status, presence: true
 
-  def total
-    order_items.sum('quantity * price') + calculate_taxes
+  # Update enum values to avoid conflict
+  enum order_status: { pending: 0, paid: 1, shipped: 2 }
+
+  def subtotal
+    order_items.sum('quantity * price')
   end
 
   def calculate_taxes
-    subtotal = order_items.sum('quantity * price')
-    return 0 unless customer && customer.addresses.any?
+    return 0 unless customer && customer.province
 
-    province = customer.addresses.first.province
-    tax_rate = TaxRate.find_by(province: province)
+    tax_rate = TaxRate.find_by(province: customer.province.name)
+    Rails.logger.debug "Tax Rate for #{customer.province.name}: #{tax_rate.inspect}" # Debug log
+
     return 0 unless tax_rate
 
-    gst = tax_rate.gst_rate
-    pst = tax_rate.pst_rate
-    hst = tax_rate.hst_rate
+    gst = tax_rate.gst || 0
+    pst = tax_rate.pst || 0
+    hst = tax_rate.hst || 0
 
-    if hst.present?
-      subtotal * hst / 100
-    else
-      subtotal * gst / 100 + subtotal * pst / 100
-    end
+    tax_amount = if hst > 0
+                   subtotal * hst
+                 else
+                   subtotal * (gst + pst)
+                 end
+    Rails.logger.debug "Calculated Tax Amount: #{tax_amount}" # Debug log
+
+    tax_amount
+  end
+
+  def total
+    subtotal + calculate_taxes
   end
 
   def self.ransackable_associations(auth_object = nil)
@@ -34,6 +44,7 @@ class Order < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[status total created_at updated_at]
+    %w[order_status total created_at]
   end
+
 end

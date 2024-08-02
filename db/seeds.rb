@@ -23,6 +23,31 @@ provinces.each do |province|
   Province.find_or_create_by!(name: province)
 end
 
+# Seed Tax Rates
+tax_rates = {
+  'Alberta' => { gst: 5, pst: 0, hst: 0 },
+  'British Columbia' => { gst: 5, pst: 7, hst: 0 },
+  'Manitoba' => { gst: 5, pst: 7, hst: 0 },
+  'New Brunswick' => { gst: 0, pst: 0, hst: 15 },
+  'Newfoundland and Labrador' => { gst: 0, pst: 0, hst: 15 },
+  'Nova Scotia' => { gst: 0, pst: 0, hst: 15 },
+  'Ontario' => { gst: 0, pst: 0, hst: 13 },
+  'Prince Edward Island' => { gst: 0, pst: 0, hst: 15 },
+  'Quebec' => { gst: 5, pst: 9.975, hst: 0 },
+  'Saskatchewan' => { gst: 5, pst: 6, hst: 0 },
+  'Northwest Territories' => { gst: 5, pst: 0, hst: 0 },
+  'Nunavut' => { gst: 5, pst: 0, hst: 0 },
+  'Yukon' => { gst: 5, pst: 0, hst: 0 }
+}
+
+tax_rates.each do |province, rates|
+  TaxRate.find_or_create_by!(province: province) do |tr|
+    tr.gst = rates[:gst]
+    tr.pst = rates[:pst]
+    tr.hst = rates[:hst]
+  end
+end
+
 puts "Checking if files exist..."
 
 categories_path = Rails.root.join('db/seeds/categories.csv')

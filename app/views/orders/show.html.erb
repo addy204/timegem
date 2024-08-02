@@ -1,7 +1,7 @@
 <h1>Order Summary</h1>
 
 <p>Order ID: <%= @order.id %></p>
-<p>Status: <%= @order.status %></p>
+<p>Status: <%= @order.order_status %></p> <!-- Update here -->
 <p>Total: <%= number_to_currency(@order.total) %></p>
 
 <h2>Customer Details</h2>
@@ -17,7 +17,7 @@
   <% address = @order.customer.addresses.last %>
   <p><%= address.address_line_1 %></p>
   <p><%= address.address_line_2 %></p>
-  <p><%= address.city %>, <%= address.province %></p>
+  <p><%= address.city %>, <%= address.province.name %></p>
   <p><%= address.postal_code %></p>
   <p><%= address.country %></p>
 <% else %>
@@ -49,11 +49,11 @@
 <h2>Summary</h2>
 <% if @order.customer && @order.customer.addresses.any? %>
   <% address = @order.customer.addresses.last %>
-  <p>Subtotal: <%= number_to_currency(@order.order_items.sum { |item| item.price * item.quantity }) %></p>
-  <p>Taxes: <%= number_to_currency(calculate_taxes(@order.order_items.sum { |item| item.price * item.quantity }, address.province)) %></p>
+  <p>Subtotal: <%= number_to_currency(@order.subtotal) %></p>
+  <p>Taxes: <%= number_to_currency(@order.calculate_taxes) %></p>
   <p>Total: <%= number_to_currency(@order.total) %></p>
 <% else %>
-  <p>Subtotal: <%= number_to_currency(@order.order_items.sum { |item| item.price * item.quantity }) %></p>
+  <p>Subtotal: <%= number_to_currency(@order.subtotal) %></p>
   <p>Taxes: Information not available</p>
   <p>Total: <%= number_to_currency(@order.total) %></p>
 <% end %>

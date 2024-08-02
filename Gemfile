@@ -72,4 +72,6 @@ gem 'active_storage_validations'
 gem 'sassc-rails'
 gem 'faker'
 gem 'kaminari'
+gem 'stripe'
+
 # gems currently added
