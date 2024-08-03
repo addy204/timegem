@@ -1,9 +1,10 @@
-# app/models/product.rb
 class Product < ApplicationRecord
   belongs_to :category
   has_many_attached :images
 
-  validates :name, :price, :stock_quantity, presence: true
+  validates :name, presence: true
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :stock_quantity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   scope :on_sale, -> { where(on_sale: true) }
   scope :new_products, -> { where('created_at >= ?', 3.days.ago) }

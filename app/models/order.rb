@@ -5,8 +5,8 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_items, :customer
 
   validates :order_status, presence: true
+  validates :total, numericality: { greater_than_or_equal_to: 0 }
 
-  # Update enum values to avoid conflict
   enum order_status: { pending: 0, paid: 1, shipped: 2 }
 
   def subtotal

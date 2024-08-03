@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :orders, through: :customer
   belongs_to :province, optional: true
 
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :address, presence: true
   validates :province, presence: true
 
