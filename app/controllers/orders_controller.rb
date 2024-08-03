@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @orders = current_user.orders.includes(:order_items => :product).order(created_at: :desc)
+    @orders = current_user.orders.includes(order_items: :product).order(created_at: :desc)
   end
 
   def show
@@ -24,7 +24,7 @@ class OrdersController < ApplicationController
 
   def create
     @order = current_user.orders.build(order_params)
-    @order.order_status = "pending"
+    @order.order_status = "pending" # Use order_status instead of status
 
     if current_user.customer
       @order.customer = current_user.customer
@@ -43,8 +43,6 @@ class OrdersController < ApplicationController
       end
     end
 
-    @order.status = "unpaid"
-
     if @order.save
       @cart['items'].each do |item|
         product = Product.find(item['product_id'])
@@ -57,7 +55,7 @@ class OrdersController < ApplicationController
 
       @order.update(total: @order.total)
 
-      process_payment
+      redirect_to @order, notice: "Order was successfully created."
     else
       @order.customer.addresses.build unless @order.customer.addresses.any?
       flash[:alert] = "Order creation failed: #{@order.errors.full_messages.join(', ')}"
@@ -66,27 +64,6 @@ class OrdersController < ApplicationController
   end
 
   private
-
-  def process_payment
-    charge = Stripe::Charge.create(
-      amount: (@order.total * 100).to_i,
-      currency: 'usd',
-      description: "Order ##{@order.id}",
-      source: params[:stripeToken]
-    )
-
-    if charge.paid
-      @order.update(status: 'paid')
-      session.delete(:cart)
-      redirect_to @order, notice: "Order was successfully created and paid."
-    else
-      flash[:alert] = "Payment failed. Please try again."
-      render :new
-    end
-  rescue Stripe::CardError => e
-    flash[:alert] = e.message
-    render :new
-  end
 
   def order_params
     params.require(:order).permit(

@@ -1,3 +1,4 @@
+# app/models/order.rb
 class Order < ApplicationRecord
   belongs_to :customer
   has_many :order_items, dependent: :destroy
@@ -6,7 +7,7 @@ class Order < ApplicationRecord
 
   validates :order_status, presence: true
 
-  # Update enum values to avoid conflict
+  # Define enum for order status
   enum order_status: { pending: 0, paid: 1, shipped: 2 }
 
   def subtotal
@@ -46,5 +47,4 @@ class Order < ApplicationRecord
   def self.ransackable_attributes(auth_object = nil)
     %w[order_status total created_at]
   end
-
 end
