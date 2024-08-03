@@ -1,4 +1,3 @@
-# app/models/order.rb
 class Order < ApplicationRecord
   belongs_to :customer
   has_many :order_items, dependent: :destroy
@@ -7,7 +6,7 @@ class Order < ApplicationRecord
 
   validates :order_status, presence: true
 
-  # Define enum for order status
+  # Update enum values to avoid conflict
   enum order_status: { pending: 0, paid: 1, shipped: 2 }
 
   def subtotal
