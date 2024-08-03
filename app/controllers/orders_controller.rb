@@ -2,13 +2,14 @@
 class OrdersController < ApplicationController
   before_action :initialize_cart, only: [:new, :create]
   before_action :authenticate_user!
+  before_action :set_order, only: [:show, :destroy] # Only use actions that are defined
 
   def index
     @orders = current_user.orders.includes(order_items: :product).order(created_at: :desc)
   end
 
   def show
-    @order = current_user.orders.find(params[:id])
+    # @order is already set by the before_action
   end
 
   def new
@@ -24,7 +25,7 @@ class OrdersController < ApplicationController
 
   def create
     @order = current_user.orders.build(order_params)
-    @order.order_status = "pending" # Use order_status instead of status
+    @order.order_status = "pending"
 
     if current_user.customer
       @order.customer = current_user.customer
@@ -63,7 +64,22 @@ class OrdersController < ApplicationController
     end
   end
 
+  def destroy
+    if @order.destroy
+      redirect_to orders_path, notice: "Order was successfully deleted."
+    else
+      redirect_to orders_path, alert: "Order could not be deleted."
+    end
+  end
+
   private
+
+  def set_order
+    @order = current_user.orders.find_by(id: params[:id])
+    if @order.nil?
+      redirect_to orders_path, alert: "Order not found."
+    end
+  end
 
   def order_params
     params.require(:order).permit(

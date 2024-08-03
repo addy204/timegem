@@ -11,7 +11,7 @@
   <div class="field">
     <%= f.label :password %>
     <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
+      <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %><br />
     <%= f.password_field :password, autocomplete: "new-password" %>
   </div>
@@ -19,6 +19,17 @@
   <div class="field">
     <%= f.label :password_confirmation %><br />
     <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+  </div>
+
+  <!-- Add fields for address and province -->
+  <div class="field">
+    <%= f.label :address %><br />
+    <%= f.text_field :address, autocomplete: "address-line1" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :province_id, "Province" %><br />
+    <%= f.collection_select :province_id, Province.all, :id, :name, prompt: "Select Province" %>
   </div>
 
   <div class="actions">

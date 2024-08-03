@@ -7,18 +7,18 @@
     <h2>Customer Information</h2>
     <div>
       <%= customer_fields.label :name %>
-      <%= customer_fields.text_field :name %>
+      <%= customer_fields.text_field :name, required: true %>
     </div>
     <div>
       <%= customer_fields.label :email %>
-      <%= customer_fields.email_field :email %>
+      <%= customer_fields.email_field :email, required: true %>
     </div>
 
     <%= customer_fields.fields_for :addresses do |address_fields| %>
       <h2>Shipping Address</h2>
       <div>
         <%= address_fields.label :address_line_1 %>
-        <%= address_fields.text_field :address_line_1 %>
+        <%= address_fields.text_field :address_line_1, required: true %>
       </div>
       <div>
         <%= address_fields.label :address_line_2 %>
@@ -26,19 +26,19 @@
       </div>
       <div>
         <%= address_fields.label :city %>
-        <%= address_fields.text_field :city %>
+        <%= address_fields.text_field :city, required: true %>
       </div>
       <div>
         <%= address_fields.label :province %>
-        <%= address_fields.select :province_id, Province.all.collect { |p| [p.name, p.id] } %>
+        <%= address_fields.select :province_id, Province.all.collect { |p| [p.name, p.id] }, {}, required: true %>
       </div>
       <div>
         <%= address_fields.label :postal_code %>
-        <%= address_fields.text_field :postal_code %>
+        <%= address_fields.text_field :postal_code, required: true %>
       </div>
       <div>
         <%= address_fields.label :country %>
-        <%= address_fields.text_field :country %>
+        <%= address_fields.text_field :country, required: true %>
       </div>
     <% end %>
   <% end %>
