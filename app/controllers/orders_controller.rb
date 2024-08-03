@@ -1,9 +1,7 @@
-# app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
   before_action :initialize_cart, only: [:new, :create]
   before_action :authenticate_user!
-  before_action :set_order, only: [:show, :destroy] # Only use actions that are defined
-
+  before_action :set_order, only: [:show, :destroy]
 
   def index
     @orders = current_user.orders.includes(order_items: :product).order(created_at: :desc)
@@ -45,6 +43,8 @@ class OrdersController < ApplicationController
       end
     end
 
+    @order.update_total_and_taxes
+
     if @order.save
       @cart['items'].each do |item|
         product = Product.find(item['product_id'])
@@ -55,12 +55,34 @@ class OrdersController < ApplicationController
         )
       end
 
-      @order.update(total: @order.total)
+      @order.update_total_and_taxes
 
-      redirect_to @order, notice: "Order was successfully created."
+      if @order.save
+        # Calculate the total in cents for Stripe
+        amount = (@order.total * 100).to_i
+
+        begin
+          # Create a charge with Stripe
+          charge = Stripe::Charge.create(
+            amount: amount,
+            currency: 'usd', # Change to your currency
+            source: params[:stripeToken],
+            description: "Charge for Order #{@order.id}"
+          )
+          @order.update(order_status: 'paid', stripe_payment_id: charge.id)
+          redirect_to @order, notice: "Order was successfully created and charged."
+        rescue Stripe::CardError => e
+          @order.destroy # Rollback order creation if payment fails
+          flash[:alert] = e.message
+          render :new
+        end
+      else
+        @order.customer.addresses.build unless @order.customer.addresses.any?
+        flash[:alert] = "Order creation failed: #{@order.errors.full_messages.join(', ')}"
+        render :new
+      end
     else
-      @order.customer.addresses.build unless @order.customer.addresses.any?
-      flash[:alert] = "Order creation failed: #{@order.errors.full_messages.join(', ')}"
+      flash[:alert] = "Order is invalid: #{@order.errors.full_messages.join(', ')}"
       render :new
     end
   end
