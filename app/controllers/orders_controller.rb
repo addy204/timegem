@@ -4,6 +4,7 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_order, only: [:show, :destroy] # Only use actions that are defined
 
+
   def index
     @orders = current_user.orders.includes(order_items: :product).order(created_at: :desc)
   end

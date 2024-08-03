@@ -4,7 +4,7 @@ class User < ApplicationRecord
 
   has_one :customer, dependent: :destroy
   has_many :orders, through: :customer
-  belongs_to :province, optional: true
+  belongs_to :province, optional: false
 
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :address, presence: true
