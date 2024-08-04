@@ -6,6 +6,7 @@ class Customer < ApplicationRecord
 
   validates :name, presence: true
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :province_id, presence: true
 
   accepts_nested_attributes_for :addresses, allow_destroy: true
 

@@ -5,6 +5,7 @@ class Product < ApplicationRecord
   validates :name, presence: true
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :stock_quantity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :description, presence: true
 
   scope :on_sale, -> { where(on_sale: true) }
   scope :new_products, -> { where('created_at >= ?', 3.days.ago) }

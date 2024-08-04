@@ -9,6 +9,7 @@ class User < ApplicationRecord
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :address, presence: true
   validates :province, presence: true
+  validates :username, presence: true, uniqueness: true
 
   def self.ransackable_attributes(auth_object = nil)
     %w[id email created_at updated_at address province_id]
