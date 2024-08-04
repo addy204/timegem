@@ -41,6 +41,9 @@ ActiveAdmin.register Order do
       number_to_currency(order.total)
     end
 
+    # Stripe Payment ID
+    column :stripe_payment_id
+
     actions
   end
 
@@ -62,6 +65,7 @@ ActiveAdmin.register Order do
       row :total do |order|
         number_to_currency(order.total)
       end
+      row :stripe_payment_id
       row :created_at
       row :updated_at
     end
@@ -88,5 +92,5 @@ ActiveAdmin.register Order do
   filter :created_at
 
   # Permit params for editing
-  permit_params :customer_id, :order_status, :total
+  permit_params :customer_id, :order_status, :total, :stripe_payment_id
 end
