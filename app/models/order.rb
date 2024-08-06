@@ -12,20 +12,13 @@ class Order < ApplicationRecord
   before_validation :update_total_and_taxes
 
   def subtotal
-    order_items.sum('quantity * price')
+    order_items.sum('quantity * price_at_order')
   end
 
   def calculate_taxes
-    return 0 unless customer && customer.province
-
-    tax_rate = TaxRate.find_by(province_id: customer.province_id)
-    Rails.logger.debug "Tax Rate for #{customer.province.name}: #{tax_rate.inspect}"
-
-    return 0 unless tax_rate
-
-    gst = tax_rate.gst || 0
-    pst = tax_rate.pst || 0
-    hst = tax_rate.hst || 0
+    gst = gst_at_order || 0
+    pst = pst_at_order || 0
+    hst = hst_at_order || 0
 
     if hst > 0
       subtotal * hst
@@ -36,6 +29,13 @@ class Order < ApplicationRecord
 
   def update_total_and_taxes
     self.total = subtotal + calculate_taxes
+  end
+
+  def set_tax_rates(province)
+    tax_rate = TaxRate.find_by(province_id: province.id)
+    self.gst_at_order = tax_rate.gst
+    self.pst_at_order = tax_rate.pst
+    self.hst_at_order = tax_rate.hst
   end
 
   def self.ransackable_associations(auth_object = nil)

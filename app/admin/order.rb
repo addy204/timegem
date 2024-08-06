@@ -23,9 +23,9 @@ ActiveAdmin.register Order do
         order.order_items.each do |item|
           product_name = item.product&.name || "Unknown Product"
           quantity = item.quantity || 0
-          price = item.price || 0
-          total = number_to_currency(quantity * price)
-          li "#{product_name} (Qty: #{quantity}, Total: #{total})"
+          price_at_order = number_to_currency(item.price_at_order || 0)
+          total = number_to_currency(quantity * (item.price_at_order || 0))
+          li "#{product_name} (Qty: #{quantity}, Price: #{price_at_order}, Total: #{total})"
         end
       end
     end
@@ -40,9 +40,6 @@ ActiveAdmin.register Order do
     column :total do |order|
       number_to_currency(order.total)
     end
-
-    # Stripe Payment ID
-    column :stripe_payment_id
 
     actions
   end
@@ -65,7 +62,6 @@ ActiveAdmin.register Order do
       row :total do |order|
         number_to_currency(order.total)
       end
-      row :stripe_payment_id
       row :created_at
       row :updated_at
     end
@@ -76,11 +72,11 @@ ActiveAdmin.register Order do
           item.product&.name || "Unknown Product"
         end
         column :quantity
-        column :price do |item|
-          number_to_currency(item.price || 0)
+        column :price_at_order do |item|
+          number_to_currency(item.price_at_order || 0)
         end
         column :total do |item|
-          number_to_currency((item.quantity || 0) * (item.price || 0))
+          number_to_currency((item.quantity || 0) * (item.price_at_order || 0))
         end
       end
     end
@@ -92,5 +88,5 @@ ActiveAdmin.register Order do
   filter :created_at
 
   # Permit params for editing
-  permit_params :customer_id, :order_status, :total, :stripe_payment_id
+  permit_params :customer_id, :order_status, :total
 end

@@ -28,18 +28,20 @@ class OrdersController < ApplicationController
 
     if current_user.customer
       @order.customer = current_user.customer
-      address_params = order_params.dig(:customer_attributes, :addresses_attributes, "0")
+      address_params = order_params[:customer_attributes][:addresses_attributes]["0"]
       province = Province.find_by(id: address_params[:province_id])
       if province
         @order.customer.province_id = province.id
         @order.customer.addresses.first.update(address_params)
+        @order.set_tax_rates(province)
       end
     else
       customer_params = order_params[:customer_attributes]
-      province = Province.find_by(id: customer_params.dig(:addresses_attributes, "0", :province_id))
+      province = Province.find_by(id: customer_params[:addresses_attributes]["0"][:province_id])
       if province
         customer_params[:province_id] = province.id
         @order.customer = current_user.build_customer(customer_params)
+        @order.set_tax_rates(province)
       end
     end
 
@@ -51,7 +53,7 @@ class OrdersController < ApplicationController
         @order.order_items.create(
           product: product,
           quantity: item['quantity'],
-          price: product.price
+          price_at_order: product.price
         )
       end
 

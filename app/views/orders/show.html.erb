@@ -39,24 +39,19 @@
       <tr>
         <td><%= item.product.name %></td>
         <td><%= item.quantity %></td>
-        <td><%= number_to_currency(item.price) %></td>
-        <td><%= number_to_currency(item.price * item.quantity) %></td>
+        <td><%= number_to_currency(item.price_at_order) %></td>
+        <td><%= number_to_currency(item.price_at_order * item.quantity) %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <h2>Summary</h2>
-<% if @order.customer && @order.customer.province && @order.customer.province.tax_rate %>
-  <p>Subtotal: <%= number_to_currency(@order.subtotal) %></p>
-  <p>GST: <%= number_to_currency(@order.subtotal * @order.customer.province.tax_rate.gst) %></p>
-  <p>PST: <%= number_to_currency(@order.subtotal * @order.customer.province.tax_rate.pst) %></p>
-  <p>HST: <%= number_to_currency(@order.subtotal * @order.customer.province.tax_rate.hst) %></p>
-  <p>Taxes: <%= number_to_currency(@order.calculate_taxes) %></p>
-  <p><strong>Total after Taxes: <%= number_to_currency(@order.total) %></strong></p>
-<% else %>
-  <p>Subtotal: <%= number_to_currency(@order.subtotal) %></p>
-  <p>Taxes: Information not available</p>
-<% end %>
+<p>Subtotal: <%= number_to_currency(@order.subtotal) %></p>
+<p>GST: <%= number_to_currency(@order.gst_at_order * @order.subtotal) %></p>
+<p>PST: <%= number_to_currency(@order.pst_at_order * @order.subtotal) %></p>
+<p>HST: <%= number_to_currency(@order.hst_at_order * @order.subtotal) %></p>
+<p>Taxes: <%= number_to_currency(@order.calculate_taxes) %></p>
+<p><strong>Total after Taxes: <%= number_to_currency(@order.total) %></strong></p>
 
 <%= link_to 'Back to My Orders', orders_path %>
