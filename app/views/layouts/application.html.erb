@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Timegems</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+  <meta name="csrf-param" content="authenticity_token">
+  <meta name="csrf-token" content="BTMt_m-cLg0fKX9d_m__coHseZJDLsklGJ40ltEV0eez2B3gwAymDdbL4sw582CUIb2NIsiAk3-ozBRY2V-Ztw">
 
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
-  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
+  <!-- Corrected link and script tags -->
+  <link rel="stylesheet" href="<%= asset_path('application.css') %>" media="all" data-turbo-track="reload">
+  <script src="<%= asset_path('application.js') %>" data-turbo-track="reload" defer></script>
 </head>
 
 <body>
@@ -16,8 +18,8 @@
       <ul>
         <li><%= link_to 'Products', products_path %></li>
         <li><%= link_to 'Categories', categories_path %></li>
-        <li><%= link_to 'About', page_path(title: 'About') %></li>
-        <li><%= link_to 'Contact', page_path(title: 'Contact') %></li>
+        <li><%= link_to 'About', page_path('about') %></li>
+        <li><%= link_to 'Contact', page_path('contact') %></li>
         <li><%= link_to 'Cart', cart_path %></li>
         <% if user_signed_in? %>
           <li><%= link_to 'My Orders', orders_path %></li>
@@ -30,6 +32,7 @@
       </ul>
     </nav>
   </header>
+  
   <main>
     <%= yield %>
   </main>

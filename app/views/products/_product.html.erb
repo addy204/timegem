@@ -1,5 +1,5 @@
 <div class="product">
-  <h2><%= link_to product.name, product_path(product) %></h2>
-  <p><%= product.description %></p>
-  <p>Price: <%= product.price %></p>
+  <h2><%= link_to h(product.name), product_path(product) %></h2>
+  <p><%= h(product.description) %></p>
+  <p>Price: <%= number_to_currency(product.price) %></p>
 </div>

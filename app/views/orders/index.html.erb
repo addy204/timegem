@@ -1,26 +1,69 @@
-<h1>My Orders</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders</title>
+  <style>
+    /* Add any specific styles here */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>My Orders</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Order ID</th>
-      <th>Status</th>
-      <th>Subtotal</th>
-      <th>Taxes</th>
-      <th>Total</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @orders.each do |order| %>
-      <tr>
-        <td><%= order.id %></td>
-        <td><%= order.order_status %></td> <!-- Update here -->
-        <td><%= number_to_currency(order.subtotal) %></td>
-        <td><%= number_to_currency(order.calculate_taxes) %></td>
-        <td><%= number_to_currency(order.total) %></td>
-        <td><%= link_to 'View', order_path(order) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Status</th>
+          <th>Subtotal</th>
+          <th>Taxes</th>
+          <th>Total</th>
+          <th>Products</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @orders.each do |order| %>
+          <tr>
+            <td><%= order.id %></td>
+            <td><%= order.order_status.capitalize %></td>
+            <td><%= number_to_currency(order.subtotal) %></td>
+            <td><%= number_to_currency(order.calculate_taxes) %></td>
+            <td><%= number_to_currency(order.total) %></td>
+            <td>
+              <ul>
+                <% order.order_items.each do |item| %>
+                  <li>
+                    <%= item.product.name %> (Quantity: <%= item.quantity %>, Total: <%= number_to_currency(item.quantity * item.price) %>)
+                  </li>
+                <% end %>
+              </ul>
+            </td>
+            <td><%= link_to 'View', order_path(order) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

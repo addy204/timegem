@@ -5,23 +5,23 @@
 <%= search_form_for @q, url: products_path, method: :get do |form| %>
   <div>
     <%= form.label :name_cont, "Search by Name" %>
-    <%= form.text_field :name_cont %>
+    <%= form.text_field :name_cont, id: "q_name_cont" %>
   </div>
   <div>
     <%= form.label :category_id_eq, "Filter by Category" %>
     <%= form.collection_select :category_id_eq, @categories, :id, :name, prompt: "Select a Category" %>
   </div>
   <div>
-    <%= form.label :on_sale, "On Sale" %>
-    <%= form.check_box :on_sale_true %>
+    <%= form.label :on_sale_true, "On Sale" %>
+    <%= form.check_box :on_sale_true, {}, "1", "0" %>
   </div>
   <div>
     <%= form.label :created_at_gteq, "New (added in the last 3 days)" %>
-    <%= form.check_box :created_at_gteq, {}, 3.days.ago, nil %>
+    <%= form.check_box :created_at_gteq, {}, 3.days.ago.to_date.to_s, nil %>
   </div>
   <div>
     <%= form.label :updated_at_gteq, "Recently Updated (updated in the last 3 days)" %>
-    <%= form.check_box :updated_at_gteq, {}, 3.days.ago, nil %>
+    <%= form.check_box :updated_at_gteq, {}, 3.days.ago.to_date.to_s, nil %>
   </div>
   <div>
     <%= form.submit "Search" %>
@@ -34,13 +34,13 @@
   <div>
     <h2><%= link_to product.name, product_path(product) %></h2>
     <p><%= product.description %></p>
-    <p>Price: <%= product.price %></p>
+    <p>Price: <%= number_to_currency(product.price) %></p>
     <p>Stock Quantity: <%= product.stock_quantity %></p>
     <p>Category: <%= product.category.name %></p>
     <% if product.images.attached? %>
       <div>
         <% product.images.each do |image| %>
-          <%= image_tag url_for(image) %>
+          <%= image_tag url_for(image), alt: product.name %>
         <% end %>
       </div>
     <% end %>

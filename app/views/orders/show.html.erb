@@ -16,7 +16,9 @@
 <% if @order.customer && @order.customer.addresses.any? %>
   <% address = @order.customer.addresses.last %>
   <p><%= address.address_line_1 %></p>
-  <p><%= address.address_line_2 %></p>
+  <% if address.address_line_2.present? %>
+    <p><%= address.address_line_2 %></p>
+  <% end %>
   <p><%= address.city %>, <%= address.province.name %></p>
   <p><%= address.postal_code %></p>
   <p><%= address.country %></p>
@@ -49,9 +51,3 @@
 <h2>Summary</h2>
 <p>Subtotal: <%= number_to_currency(@order.subtotal) %></p>
 <p>GST: <%= number_to_currency(@order.gst_at_order * @order.subtotal) %></p>
-<p>PST: <%= number_to_currency(@order.pst_at_order * @order.subtotal) %></p>
-<p>HST: <%= number_to_currency(@order.hst_at_order * @order.subtotal) %></p>
-<p>Taxes: <%= number_to_currency(@order.calculate_taxes) %></p>
-<p><strong>Total after Taxes: <%= number_to_currency(@order.total) %></strong></p>
-
-<%= link_to 'Back to My Orders', orders_path %>

@@ -1,14 +1,14 @@
-<h1><%= @product.name %></h1>
-<p><%= @product.description %></p>
+<h1><%= h(@product.name) %></h1>
+<p><%= h(@product.description) %></p>
 <p>Price: <%= number_to_currency(@product.price) %></p>
 <p>Stock Quantity: <%= @product.stock_quantity %></p>
-<p>Category: <%= @product.category.name %></p>
+<p>Category: <%= h(@product.category.name) %></p>
 <% if @product.images.attached? %>
-  <div>
+  <div class="product-images">
     <% @product.images.each do |image| %>
-      <%= image_tag url_for(image), alt: @product.name %>
+      <%= image_tag url_for(image), alt: h(@product.name) %>
     <% end %>
   </div>
 <% end %>
 
-<%= button_to 'Add to Cart', add_to_cart_path(@product), method: :post %>
+<%= button_to 'Add to Cart', add_to_cart_path(@product), method: :post, class: 'add-to-cart-button' %>
