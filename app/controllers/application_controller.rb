@@ -1,13 +1,18 @@
-# app/controllers/application_controller.rb
 class ApplicationController < ActionController::Base
+  include ApplicationHelper # Makes helper methods available in controllers
+
   before_action :initialize_cart
   before_action :configure_permitted_parameters, if: :devise_controller?
-  helper OrdersHelper
+  before_action :add_home_breadcrumb # Always add the home breadcrumb
 
   private
 
   def initialize_cart
     @cart = session[:cart] ||= { 'items' => [] }
+  end
+
+  def add_home_breadcrumb
+    add_breadcrumb "Home", :root_path
   end
 
   protected

@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show]
+  before_action :set_product_breadcrumbs, only: [:show]
 
   def index
     @categories = Category.all
@@ -24,5 +25,11 @@ class ProductsController < ApplicationController
 
   def set_product
     @product = Product.find(params[:id])
+  end
+
+  def set_product_breadcrumbs
+    add_breadcrumb "Categories", categories_path
+    add_breadcrumb @product.category.name, category_path(@product.category)
+    add_breadcrumb @product.name, product_path(@product)
   end
 end
