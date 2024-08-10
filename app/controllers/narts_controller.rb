@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CartsController < ApplicationController
   def add
     product_id = params[:product_id]
@@ -34,7 +36,7 @@ class CartsController < ApplicationController
     @cart = session[:cart] || {}
     @cart_items = @cart.map do |product_id, quantity|
       product = Product.find(product_id)
-      { product: product, quantity: quantity }
+      { product:, quantity: }
     end
   end
 end

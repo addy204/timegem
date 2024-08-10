@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 class CartsController < ApplicationController
   before_action :initialize_cart
 
-  def show
-  end
+  def show; end
 
   def add
     product = Product.find(params[:product_id])
@@ -21,7 +22,7 @@ class CartsController < ApplicationController
     item = @cart['items'].find { |i| i['product_id'] == product.id }
     if item
       new_quantity = params[:quantity].to_i
-      if new_quantity > 0
+      if new_quantity.positive?
         item['quantity'] = new_quantity
       else
         @cart['items'].reject! { |i| i['product_id'] == product.id }

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class OrdersController < ApplicationController
-  before_action :initialize_cart, only: [:new, :create]
+  before_action :initialize_cart, only: %i[new create]
   before_action :authenticate_user!
-  before_action :set_order, only: [:show, :destroy]
+  before_action :set_order, only: %i[show destroy]
 
   def index
     @orders = current_user.orders.includes(order_items: :product).order(created_at: :desc)
@@ -24,11 +26,11 @@ class OrdersController < ApplicationController
 
   def create
     @order = current_user.orders.build(order_params)
-    @order.order_status = "pending"
+    @order.order_status = 'pending'
 
     if current_user.customer
       @order.customer = current_user.customer
-      address_params = order_params[:customer_attributes][:addresses_attributes]["0"]
+      address_params = order_params[:customer_attributes][:addresses_attributes]['0']
       province = Province.find_by(id: address_params[:province_id])
       if province
         @order.customer.province_id = province.id
@@ -37,7 +39,7 @@ class OrdersController < ApplicationController
       end
     else
       customer_params = order_params[:customer_attributes]
-      province = Province.find_by(id: customer_params[:addresses_attributes]["0"][:province_id])
+      province = Province.find_by(id: customer_params[:addresses_attributes]['0'][:province_id])
       if province
         customer_params[:province_id] = province.id
         @order.customer = current_user.build_customer(customer_params)
@@ -53,7 +55,7 @@ class OrdersController < ApplicationController
       @cart['items'].each do |item|
         product = Product.find(item['product_id'])
         @order.order_items.create(
-          product: product,
+          product:,
           quantity: item['quantity'],
           price_at_order: product.price
         )
@@ -68,13 +70,13 @@ class OrdersController < ApplicationController
         begin
           # Create a charge with Stripe
           charge = Stripe::Charge.create(
-            amount: amount,
+            amount:,
             currency: 'usd', # Change to your currency
             source: params[:stripeToken],
             description: "Charge for Order #{@order.id}"
           )
           @order.update(order_status: 'paid', stripe_payment_id: charge.id)
-          redirect_to @order, notice: "Order was successfully created and charged."
+          redirect_to @order, notice: 'Order was successfully created and charged.'
         rescue Stripe::CardError => e
           @order.destroy # Rollback order creation if payment fails
           flash[:alert] = e.message
@@ -93,9 +95,9 @@ class OrdersController < ApplicationController
 
   def destroy
     if @order.destroy
-      redirect_to orders_path, notice: "Order was successfully deleted."
+      redirect_to orders_path, notice: 'Order was successfully deleted.'
     else
-      redirect_to orders_path, alert: "Order could not be deleted."
+      redirect_to orders_path, alert: 'Order could not be deleted.'
     end
   end
 
@@ -103,9 +105,9 @@ class OrdersController < ApplicationController
 
   def set_order
     @order = current_user.orders.find_by(id: params[:id])
-    if @order.nil?
-      redirect_to orders_path, alert: "Order not found."
-    end
+    return unless @order.nil?
+
+    redirect_to orders_path, alert: 'Order not found.'
   end
 
   def order_params
@@ -114,14 +116,14 @@ class OrdersController < ApplicationController
         :name,
         :email,
         :province_id,
-        addresses_attributes: [
-          :address_line_1,
-          :address_line_2,
-          :city,
-          :province_id,
-          :postal_code,
-          :country
-        ]
+        { addresses_attributes: %i[
+          address_line_1
+          address_line_2
+          city
+          province_id
+          postal_code
+          country
+        ] }
       ]
     )
   end

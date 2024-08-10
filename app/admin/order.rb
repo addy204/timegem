@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ActiveAdmin.register Order do
   index do
     selectable_column
@@ -8,7 +10,7 @@ ActiveAdmin.register Order do
       if order.customer
         link_to order.customer.name, admin_customer_path(order.customer)
       else
-        "No Customer"
+        'No Customer'
       end
     end
 
@@ -18,10 +20,10 @@ ActiveAdmin.register Order do
     end
 
     # Order items listed directly in the index
-    column "Order Items" do |order|
+    column 'Order Items' do |order|
       ul do
         order.order_items.each do |item|
-          product_name = item.product&.name || "Unknown Product"
+          product_name = item.product&.name || 'Unknown Product'
           quantity = item.quantity || 0
           price_at_order = number_to_currency(item.price_at_order || 0)
           total = number_to_currency(quantity * (item.price_at_order || 0))
@@ -66,10 +68,10 @@ ActiveAdmin.register Order do
       row :updated_at
     end
 
-    panel "Order Items" do
+    panel 'Order Items' do
       table_for order.order_items do
         column :product do |item|
-          item.product&.name || "Unknown Product"
+          item.product&.name || 'Unknown Product'
         end
         column :quantity
         column :price_at_order do |item|

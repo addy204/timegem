@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # db/seeds.rb
 require 'csv'
 require 'faker'
@@ -41,14 +43,14 @@ tax_rates = {
 }
 
 tax_rates.each do |province, rates|
-  TaxRate.find_or_create_by!(province: province) do |tr|
+  TaxRate.find_or_create_by!(province:) do |tr|
     tr.gst = rates[:gst]
     tr.pst = rates[:pst]
     tr.hst = rates[:hst]
   end
 end
 
-puts "Checking if files exist..."
+puts 'Checking if files exist...'
 
 categories_path = Rails.root.join('db/seeds/categories.csv')
 products_path = Rails.root.join('db/seeds/products.csv')
@@ -57,7 +59,7 @@ puts "Categories CSV: #{File.exist?(categories_path)}"
 puts "Products CSV: #{File.exist?(products_path)}"
 
 if File.exist?(categories_path) && File.exist?(products_path)
-  puts "Seeding categories..."
+  puts 'Seeding categories...'
   category_count = 0
   CSV.foreach(categories_path, headers: true) do |row|
     Category.find_or_create_by!(
@@ -68,7 +70,7 @@ if File.exist?(categories_path) && File.exist?(products_path)
   end
   puts "Seeded #{category_count} categories."
 
-  puts "Seeding products..."
+  puts 'Seeding products...'
   product_count = 0
   CSV.foreach(products_path, headers: true) do |row|
     category = Category.find_by(name: row['category'])
@@ -78,7 +80,7 @@ if File.exist?(categories_path) && File.exist?(products_path)
         description: row['description'],
         price: row['price'],
         stock_quantity: row['stock_quantity'],
-        category: category,
+        category:,
         on_sale: [true, false].sample # Randomly set on_sale to true or false
       )
       product_count += 1
@@ -90,21 +92,21 @@ if File.exist?(categories_path) && File.exist?(products_path)
 
   # Seed additional products using Faker if needed
   if product_count < 100
-    puts "Seeding additional products with Faker..."
+    puts 'Seeding additional products with Faker...'
     categories = Category.all
     (100 - product_count).times do
       category = categories.sample
       Product.create!(
         name: Faker::Commerce.product_name,
         description: Faker::Lorem.sentence,
-        price: Faker::Commerce.price(range: 100..20000.0, as_string: true),
+        price: Faker::Commerce.price(range: 100..20_000.0, as_string: true),
         stock_quantity: Faker::Number.between(from: 1, to: 100),
-        category: category,
+        category:,
         on_sale: [true, false].sample # Randomly set on_sale to true or false
       )
     end
-    puts "Seeded additional products to reach 100 products."
+    puts 'Seeded additional products to reach 100 products.'
   end
 else
-  puts "CSV files not found."
+  puts 'CSV files not found.'
 end

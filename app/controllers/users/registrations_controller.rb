@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # app/controllers/users/registrations_controller.rb
-class Users::RegistrationsController < Devise::RegistrationsController
-  def update
-    super do |resource|
-      if resource.errors.any?
-        Rails.logger.error "Validation errors: #{resource.errors.full_messages.join(", ")}"
+module Users
+  class RegistrationsController < Devise::RegistrationsController
+    def update
+      super do |resource|
+        Rails.logger.error "Validation errors: #{resource.errors.full_messages.join(', ')}" if resource.errors.any?
       end
     end
   end

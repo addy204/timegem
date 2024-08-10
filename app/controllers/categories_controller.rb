@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show]
   before_action :set_category_breadcrumbs, only: [:show]
@@ -19,9 +21,9 @@ class CategoriesController < ApplicationController
 
   def set_category_breadcrumbs
     # Ensure @category is not nil
-    if @category
-      add_breadcrumb "Categories", categories_path
-      add_breadcrumb @category.name, category_path(@category)
-    end
+    return unless @category
+
+    add_breadcrumb 'Categories', categories_path
+    add_breadcrumb @category.name, category_path(@category)
   end
 end

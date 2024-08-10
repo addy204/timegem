@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   include ApplicationHelper # Makes helper methods available in controllers
 
@@ -12,13 +14,16 @@ class ApplicationController < ActionController::Base
   end
 
   def add_home_breadcrumb
-    add_breadcrumb "Home", :root_path
+    add_breadcrumb 'Home', :root_path
   end
 
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation, :address, :province_id])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation, :current_password, :address, :province_id])
+    devise_parameter_sanitizer.permit(:sign_up,
+                                      keys: %i[email password password_confirmation address province_id])
+    devise_parameter_sanitizer.permit(:account_update,
+                                      keys: %i[email password password_confirmation current_password address
+                                               province_id])
   end
 end

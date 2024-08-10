@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/admin/customers.rb
 ActiveAdmin.register Customer do
   index do
@@ -23,7 +25,7 @@ ActiveAdmin.register Customer do
       row :updated_at
     end
 
-    panel "Orders" do
+    panel 'Orders' do
       table_for customer.orders do
         column :id
         column :status
@@ -40,5 +42,6 @@ ActiveAdmin.register Customer do
     end
   end
 
-  permit_params :name, :email, :province_id, addresses_attributes: [:id, :address_line_1, :address_line_2, :city, :postal_code, :country, :province_id, :_destroy]
+  permit_params :name, :email, :province_id,
+                addresses_attributes: %i[id address_line_1 address_line_2 city postal_code country province_id _destroy]
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/admin/pages.rb
 
 ActiveAdmin.register Page do

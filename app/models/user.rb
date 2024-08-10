@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -11,11 +13,11 @@ class User < ApplicationRecord
   validates :province, presence: true
   validates :username, presence: true, uniqueness: true
 
-  def self.ransackable_attributes(auth_object = nil)
+  def self.ransackable_attributes(_auth_object = nil)
     %w[id email created_at updated_at address province_id]
   end
 
-  def self.ransackable_associations(auth_object = nil)
+  def self.ransackable_associations(_auth_object = nil)
     %w[customer orders province]
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameStatusToOrderStatusInOrders < ActiveRecord::Migration[7.0]
   def change
     # Rename existing status column to preserve its values

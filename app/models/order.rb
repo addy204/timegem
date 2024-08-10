@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Order < ApplicationRecord
   belongs_to :customer
   has_many :order_items, dependent: :destroy
@@ -20,7 +22,7 @@ class Order < ApplicationRecord
     pst = pst_at_order || 0
     hst = hst_at_order || 0
 
-    if hst > 0
+    if hst.positive?
       subtotal * hst
     else
       subtotal * (gst + pst)
@@ -38,11 +40,11 @@ class Order < ApplicationRecord
     self.hst_at_order = tax_rate.hst
   end
 
-  def self.ransackable_associations(auth_object = nil)
+  def self.ransackable_associations(_auth_object = nil)
     %w[customer order_items]
   end
 
-  def self.ransackable_attributes(auth_object = nil)
+  def self.ransackable_attributes(_auth_object = nil)
     %w[order_status total created_at]
   end
 end

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module OrdersHelper
   def calculate_taxes(subtotal, province)
-    tax_rate = TaxRate.find_by(province: province)
+    tax_rate = TaxRate.find_by(province:)
     if tax_rate
       gst = tax_rate.gst || 0
       pst = tax_rate.pst || 0

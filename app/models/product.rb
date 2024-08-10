@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Product < ApplicationRecord
   belongs_to :category
   has_many_attached :images
@@ -11,11 +13,11 @@ class Product < ApplicationRecord
   scope :new_products, -> { where('created_at >= ?', 3.days.ago) }
   scope :recently_updated, -> { where('updated_at >= ?', 3.days.ago).where.not('created_at >= ?', 3.days.ago) }
 
-  def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "description", "id", "name", "price", "stock_quantity", "updated_at", "category_id", "on_sale"]
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[created_at description id name price stock_quantity updated_at category_id on_sale]
   end
 
-  def self.ransackable_associations(auth_object = nil)
-    ["category"]
+  def self.ransackable_associations(_auth_object = nil)
+    ['category']
   end
 end

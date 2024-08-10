@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   def add_breadcrumb(title, path = nil)
     @breadcrumbs ||= []
-    @breadcrumbs << { title: title, path: path }
+    @breadcrumbs << { title:, path: }
   end
 
   def render_breadcrumbs
