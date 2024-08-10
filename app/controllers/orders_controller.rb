@@ -45,7 +45,9 @@ class OrdersController < ApplicationController
       end
     end
 
-    @order.update_total_and_taxes
+    @order.subtotal = @order.subtotal
+    @order.taxes = @order.calculate_taxes
+    @order.total = @order.total
 
     if @order.save
       @cart['items'].each do |item|

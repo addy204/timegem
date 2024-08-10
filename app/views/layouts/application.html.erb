@@ -7,7 +7,6 @@
   <meta name="csrf-param" content="authenticity_token">
   <meta name="csrf-token" content="BTMt_m-cLg0fKX9d_m__coHseZJDLsklGJ40ltEV0eez2B3gwAymDdbL4sw582CUIb2NIsiAk3-ozBRY2V-Ztw">
 
-  <!-- Corrected link and script tags -->
   <link rel="stylesheet" href="<%= asset_path('application.css') %>" media="all" data-turbo-track="reload">
   <script src="<%= asset_path('application.js') %>" data-turbo-track="reload" defer></script>
 </head>
@@ -36,5 +35,9 @@
   <main>
     <%= yield %>
   </main>
+  
+  <footer>
+    <p>&copy; <%= Time.now.year %> Timegems. All rights reserved.</p>
+  </footer>
 </body>
 </html>

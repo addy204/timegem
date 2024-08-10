@@ -20,7 +20,12 @@ class CartsController < ApplicationController
     product = Product.find(params[:product_id])
     item = @cart['items'].find { |i| i['product_id'] == product.id }
     if item
-      item['quantity'] = params[:quantity].to_i
+      new_quantity = params[:quantity].to_i
+      if new_quantity > 0
+        item['quantity'] = new_quantity
+      else
+        @cart['items'].reject! { |i| i['product_id'] == product.id }
+      end
       session[:cart] = @cart
     end
     redirect_to cart_path
@@ -31,5 +36,11 @@ class CartsController < ApplicationController
     @cart['items'].reject! { |i| i['product_id'] == product.id }
     session[:cart] = @cart
     redirect_to cart_path
+  end
+
+  private
+
+  def initialize_cart
+    @cart = session[:cart] ||= { 'items' => [] }
   end
 end

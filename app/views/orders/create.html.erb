@@ -3,15 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Created</title>
+  <title>My Orders</title>
   <style>
     /* Add any specific styles here */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 <body>
   <main>
-    <h1>Order Created</h1>
-    <p>You can find the template for this page in <code>app/views/orders/create.html.erb</code>.</p>
+    <h1>My Orders</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Status</th>
+          <th>Subtotal</th>
+          <th>Taxes</th>
+          <th>Total</th>
+          <th>Products</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @orders.each do |order| %>
+          <tr>
+            <td><%= order.id %></td>
+            <td><%= order.order_status.capitalize %></td>
+            <td><%= number_to_currency(order.subtotal || calculate_subtotal(order)) %></td>
+            <td><%= number_to_currency(order.calculate_taxes || calculate_taxes(order)) %></td>
+            <td><%= number_to_currency(order.total || calculate_total(order)) %></td>
+            <td>
+              <ul>
+                <% order.order_items.each do |item| %>
+                  <li>
+                    <%= item.product.name %> (Quantity: <%= item.quantity %>, Total: <%= number_to_currency(item.quantity * (item.price || 0)) %>)
+                  </li>
+                <% end %>
+              </ul>
+            </td>
+            <td><%= link_to 'View', order_path(order) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </main>
 </body>
 </html>

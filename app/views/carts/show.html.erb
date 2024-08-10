@@ -1,6 +1,6 @@
 <h1>Your Cart</h1>
 
-<% if @cart.line_items.any? %>
+<% if @cart['items'].any? %>
   <table>
     <thead>
       <tr>
@@ -12,14 +12,20 @@
       </tr>
     </thead>
     <tbody>
-      <% @cart.line_items.each do |item| %>
+      <% @cart['items'].each do |item| %>
+        <% product = Product.find(item['product_id']) %>
         <tr>
-          <td><%= link_to item.product.name, product_path(item.product) %></td>
-          <td><%= item.quantity %></td>
-          <td><%= number_to_currency(item.product.price) %></td>
-          <td><%= number_to_currency(item.total_price) %></td>
+          <td><%= link_to product.name, product_path(product) %></td>
           <td>
-            <%= button_to 'Remove', cart_remove_path(item), method: :delete, data: { confirm: 'Are you sure you want to remove this item?' }, class: 'button' %>
+            <%= form_with url: update_cart_path(product_id: product.id), method: :patch, local: true do %>
+              <%= number_field_tag :quantity, item['quantity'], min: 1 %>
+              <%= submit_tag 'Update', class: 'button' %>
+            <% end %>
+          </td>
+          <td><%= number_to_currency(product.price) %></td>
+          <td><%= number_to_currency(product.price * item['quantity']) %></td>
+          <td>
+            <%= button_to 'Remove', remove_from_cart_path(product_id: product.id), method: :delete, data: { confirm: 'Are you sure you want to remove this item?' }, class: 'button' %>
           </td>
         </tr>
       <% end %>
@@ -27,7 +33,8 @@
   </table>
 
   <div class="cart-total">
-    <h2>Total: <%= number_to_currency(@cart.total_price) %></h2>
+    <% total_price = @cart['items'].sum { |item| Product.find(item['product_id']).price * item['quantity'] } %>
+    <h2>Total: <%= number_to_currency(total_price) %></h2>
     <%= link_to 'Checkout', new_order_path, class: 'button checkout' %>
   </div>
 <% else %>

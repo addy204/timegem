@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Orders</title>
   <style>
-    /* Add any specific styles here */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -54,7 +53,7 @@
               <ul>
                 <% order.order_items.each do |item| %>
                   <li>
-                    <%= item.product.name %> (Quantity: <%= item.quantity %>, Total: <%= number_to_currency(item.quantity * item.price) %>)
+                    <%= item.product.name %> (Quantity: <%= item.quantity %>, Total: <%= number_to_currency(item.quantity * (item.price_at_order || 0)) %>)
                   </li>
                 <% end %>
               </ul>

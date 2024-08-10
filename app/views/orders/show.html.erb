@@ -50,4 +50,5 @@
 
 <h2>Summary</h2>
 <p>Subtotal: <%= number_to_currency(@order.subtotal) %></p>
-<p>GST: <%= number_to_currency(@order.gst_at_order * @order.subtotal) %></p>
+<p>Taxes: <%= number_to_currency(@order.calculate_taxes) %></p>
+<p>Total: <%= number_to_currency(@order.total) %></p>

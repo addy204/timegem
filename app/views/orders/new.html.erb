@@ -6,7 +6,6 @@
   <title>Checkout</title>
   <%= javascript_include_tag "https://js.stripe.com/v3/" %>
   <style>
-    /* Add custom styles here */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -105,6 +104,14 @@
             <% end %>
           </tbody>
         </table>
+
+        <% subtotal = @cart['items'].sum { |item| Product.find(item['product_id']).price * item['quantity'] } %>
+        <% taxes = calculate_taxes(subtotal, current_user.province) %>
+        <% total = subtotal + taxes %>
+
+        <p>Subtotal: <%= number_to_currency(subtotal) %></p>
+        <p>Taxes: <%= number_to_currency(taxes) %></p>
+        <p>Total: <%= number_to_currency(total) %></p>
       </section>
 
       <section>
